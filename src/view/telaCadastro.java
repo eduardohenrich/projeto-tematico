@@ -1,27 +1,21 @@
 package view;
 
-import java.awt.EventQueue;
-
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import dao.Conexao;
-import dao.UsuarioDAO;
-import model.Usuario;
-
+import controller.cadastroController;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.SQLException;
+
 import java.awt.Color;
 
 public class telaCadastro extends JFrame {
 
+	private final cadastroController controller;
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textField;
@@ -33,24 +27,11 @@ public class telaCadastro extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-	    EventQueue.invokeLater(new Runnable() {
-	        public void run() {
-	            try {
-	                telaCadastro frame = new telaCadastro();
-	                frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-	                frame.setVisible(true);
-	                frame.setLocationRelativeTo(null);
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    });
-	}
 	/**
 	 * Create the frame.
 	 */
-	public telaCadastro() {
+	public telaCadastro(String message) {
+		controller = new cadastroController(this);
 		setBackground(new Color(240, 240, 240));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1129, 709);
@@ -101,19 +82,7 @@ public class telaCadastro extends JFrame {
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnNewButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        String nome = textField_1.getText();
-		        String email = textField.getText();
-		        String senha = textField_2.getText();
-		        
-		        Usuario usuario = new Usuario(nome, email, senha);
-		        
-				try {
-					Connection conexao = new Conexao().getConnection();
-					UsuarioDAO user = new UsuarioDAO(conexao);
-					user.insert(usuario);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+		        controller.salvaUsuario();
 		        
 		    }
 		});
@@ -124,5 +93,28 @@ public class telaCadastro extends JFrame {
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_3.setBounds(276, 56, 136, 45);
 		panel.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel(message);
+		lblNewLabel_4.setBounds(221, 273, 191, 13);
+		panel.add(lblNewLabel_4);
+	}
+	
+	public JTextField getTextFieldEmail() {
+		return textField;
+	}
+	public void setTextFieldEmail(JTextField textField) {
+		this.textField = textField;
+	}
+	public JTextField getTextFieldNome() {
+		return textField_1;
+	}
+	public void setTextFieldNome(JTextField textField_1) {
+		this.textField_1 = textField_1;
+	}
+	public JTextField getTextFieldSenha() {
+		return textField_2;
+	}
+	public void setTextFieldSenha(JTextField textField_2) {
+		this.textField_2 = textField_2;
 	}
 }
