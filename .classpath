@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="projeto-tematico/src"/>
+	<classpathentry kind="lib" path="projeto-tematico/lib/annotations-13.0.jar"/>
+	<classpathentry kind="lib" path="projeto-tematico/lib/java-dotenv-5.2.2.jar"/>
+	<classpathentry kind="lib" path="projeto-tematico/lib/kotlin-stdlib-1.4.0.jar"/>
+	<classpathentry kind="lib" path="projeto-tematico/lib/kotlin-stdlib-common-1.4.0.jar"/>
+	<classpathentry kind="lib" path="projeto-tematico/postgresql-42.7.4.jar"/>
+	<classpathentry kind="output" path="projeto-tematico/out/production/projeto-tematico"/>
+</classpath>
