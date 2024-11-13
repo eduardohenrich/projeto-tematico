@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import model.Futebol;
 import model.Natacao;
 
 public class NatacaoDAO {
@@ -71,6 +73,32 @@ public class NatacaoDAO {
                     return new Natacao(id, nome, primeiro, segundo, terceiro);
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Natacao[] consultaNatacaos() throws SQLException {
+        String sql = "SELECT nome, primeiro, segundo, terceiro FROM natacao";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                Natacao[] natacaos = new Natacao[rs.getFetchSize()];
+                int i = 0;
+                while (rs.next()) {
+                    String nome = rs.getString("nome");
+                    String primeiro = rs.getString("primeiro");
+                    String segundo = rs.getString("segundo");
+                    String terceiro = rs.getString("terceiro");
+
+                    natacaos[i] = new Natacao(nome, primeiro, segundo, terceiro);
+                    i++;
+                }
+                return natacaos;
+            }
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }

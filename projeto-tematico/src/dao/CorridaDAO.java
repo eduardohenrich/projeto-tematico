@@ -76,4 +76,28 @@ public class CorridaDAO {
         }
         return null;
     }
+
+    public Corrida[] consultaCorridas() throws SQLException {
+        String sql = "SELECT nome, primeiro, segundo, terceiro FROM corrida";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                Corrida[] corridas = new Corrida[3];
+                int i = 0;
+                while (rs.next()) {
+                    String nome = rs.getString("nome");
+                    String primeiro = rs.getString("primeiro");
+                    String segundo = rs.getString("segundo");
+                    String terceiro = rs.getString("terceiro");
+
+                    corridas[i] = new Corrida(i, nome, primeiro, segundo, terceiro);
+                    i++;
+                }
+                return corridas;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

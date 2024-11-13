@@ -33,7 +33,7 @@ public class loginController {
 		if (usuario != null && usuario.getEmail() != null && usuario.getEmail().equals(usuarioAutenticar.getEmail()) &&
 		usuario.getSenha() != null && usuario.getSenha().equals(senha)) {
 			login.dispose();
-			principal frame = new principal(usuario.getNome());
+			principal frame = new principal(usuario.getNome(), usuario.getRole());
 			frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);

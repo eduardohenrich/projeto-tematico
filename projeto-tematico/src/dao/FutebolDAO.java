@@ -48,7 +48,7 @@ public class FutebolDAO {
                     String timeB = rs.getString("timeB");
                     int pontoB = rs.getInt("pontoB");
 
-                    return new Futebol(id, nome, timeA, pontoA, timeB, pontoB);
+                    return new Futebol(id, nome, timeA, timeB, pontoA, pontoB);
                 }
             }
         } catch (SQLException e) {
@@ -71,8 +71,34 @@ public class FutebolDAO {
                     String timeB = rs.getString("timeB");
                     int pontoB = rs.getInt("pontoB");
 
-                    return new Futebol(id, nome, timeA, pontoA, timeB, pontoB);
+                    return new Futebol(id, nome, timeA, timeB, pontoA, pontoB);
                 }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Futebol[] consultaFutebols() throws SQLException {
+        String sql = "SELECT nome, timeA, pontoA, timeB, pontoB FROM futebol";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                Futebol[] futebols = new Futebol[rs.getFetchSize()];
+                int i = 0;
+                while (rs.next()) {
+                    String nome = rs.getString("nome");
+                    String timeA = rs.getString("timeA");
+                    int pontoA = rs.getInt("pontoA");
+                    String timeB = rs.getString("timeB");
+                    int pontoB = rs.getInt("pontoB");
+
+                    futebols[i] = new Futebol(nome, timeA, timeB, pontoA, pontoB);
+                    i++;
+                }
+                return futebols;
             }
         } catch (SQLException e) {
             e.printStackTrace();

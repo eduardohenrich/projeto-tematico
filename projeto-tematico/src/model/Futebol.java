@@ -60,7 +60,7 @@ public class Futebol {
         return pontoA;
     }
 
-    public void setPontoA(String pontoA) {
+    public void setPontoA(int pontoA) {
         this.pontoA = pontoA;
     }
 
@@ -78,7 +78,7 @@ public class Futebol {
         return pontoB;
     }
 
-    public void setPontoB(String pontoB) {
+    public void setPontoB(int pontoB) {
         this.pontoB = pontoB;
     }
 }
