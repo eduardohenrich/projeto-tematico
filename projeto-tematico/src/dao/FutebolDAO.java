@@ -1,9 +1,13 @@
 package dao;
 
+import java.io.Console;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Futebol;
 
 public class FutebolDAO {
@@ -80,29 +84,32 @@ public class FutebolDAO {
         return null;
     }
 
-    public Futebol[] consultaFutebols() throws SQLException {
-        String sql = "SELECT nome, timeA, pontoA, timeB, pontoB FROM futebol";
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+public List<Futebol> consultaFutebols() {
+    String sql = "SELECT nome, timeA, pontoA, timeB, pontoB FROM futebol";
+    
+    List<Futebol> futebols = new ArrayList<>(); // Usando ArrayList
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                Futebol[] futebols = new Futebol[rs.getFetchSize()];
-                int i = 0;
-                while (rs.next()) {
-                    String nome = rs.getString("nome");
-                    String timeA = rs.getString("timeA");
-                    int pontoA = rs.getInt("pontoA");
-                    String timeB = rs.getString("timeB");
-                    int pontoB = rs.getInt("pontoB");
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String nome = rs.getString("nome");
+                String timeA = rs.getString("timeA");
+                int pontoA = rs.getInt("pontoA");
+                String timeB = rs.getString("timeB");
+                int pontoB = rs.getInt("pontoB");
 
-                    futebols[i] = new Futebol(nome, timeA, timeB, pontoA, pontoB);
-                    i++;
-                }
-                return futebols;
+                futebols.add(new Futebol(nome, timeA, timeB, pontoA, pontoB));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            // Se necessário, imprimir os dados
+            for (Futebol futebol : futebols) {
+                System.out.println(futebol);
+            }
         }
-        return null;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return futebols;
+}
+
 }

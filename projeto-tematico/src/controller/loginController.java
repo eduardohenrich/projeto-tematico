@@ -7,7 +7,7 @@ import dao.UsuarioDAO;
 import model.Usuario;
 import view.Login;
 import view.Login;
-import view.principal;
+import view.Principal;
 
 public class loginController {
 
@@ -31,9 +31,9 @@ public class loginController {
 		Usuario usuario = user.consultaUsuarioLogin(usuarioAutenticar);
 		
 		if (usuario != null && usuario.getEmail() != null && usuario.getEmail().equals(usuarioAutenticar.getEmail()) &&
-		usuario.getSenha() != null && usuario.getSenha().equals(senha)) {
+		usuario.getSenha() != null && usuario.getSenha().equals(senha) && usuario.getId() != 0) {
 			login.dispose();
-			principal frame = new principal(usuario.getNome(), usuario.getRole());
+			Principal frame = new Principal(usuario.getNome(), usuario.getRole());
 			frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);

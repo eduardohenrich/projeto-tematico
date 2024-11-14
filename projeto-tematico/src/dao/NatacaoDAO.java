@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import model.Futebol;
+import java.util.ArrayList;
+import java.util.List;
 import model.Natacao;
 
 public class NatacaoDAO {
@@ -37,7 +37,7 @@ public class NatacaoDAO {
 
     public Natacao consultaNatacaoPorNome(String nome) throws SQLException {
         String sql = "SELECT id, nome, primeiro, segundo, terceiro FROM natacao WHERE nome = ?";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, nome);
 
@@ -59,7 +59,7 @@ public class NatacaoDAO {
 
     public Natacao consultaNatacaoPorId(int id) throws SQLException {
         String sql = "SELECT nome, primeiro, segundo, terceiro FROM natacao WHERE id = ?";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
 
@@ -79,29 +79,26 @@ public class NatacaoDAO {
         return null;
     }
 
-    public Natacao[] consultaNatacaos() throws SQLException {
+    public List<Natacao> consultaNatacaos() throws SQLException {
         String sql = "SELECT nome, primeiro, segundo, terceiro FROM natacao";
-        
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        List<Natacao> natacaos = new ArrayList<>();
 
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
-                Natacao[] natacaos = new Natacao[rs.getFetchSize()];
-                int i = 0;
                 while (rs.next()) {
                     String nome = rs.getString("nome");
                     String primeiro = rs.getString("primeiro");
                     String segundo = rs.getString("segundo");
                     String terceiro = rs.getString("terceiro");
 
-                    natacaos[i] = new Natacao(nome, primeiro, segundo, terceiro);
-                    i++;
+                    Natacao natacao = new Natacao(nome, primeiro, segundo, terceiro);
+                    natacaos.add(natacao);
                 }
-                return natacaos;
             }
-            
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return natacaos; // Return the List
     }
 }

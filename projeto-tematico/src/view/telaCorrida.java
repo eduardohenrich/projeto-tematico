@@ -133,7 +133,7 @@ public class telaCorrida extends JFrame {
     private void voltarParaTelaInicial(String name, int role) {
         dispose();
         // Assuming you have a TelaInicial class to go back to
-        principal telaInicial = new principal(name, role);
+        Principal telaInicial = new Principal(name, role);
         telaInicial.setExtendedState(JFrame.MAXIMIZED_BOTH);
         telaInicial.setLocationRelativeTo(null);
         telaInicial.setVisible(true);

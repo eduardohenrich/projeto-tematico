@@ -4,7 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Corrida;
+import model.Futebol;
 
 public class CorridaDAO {
 
@@ -35,7 +39,7 @@ public class CorridaDAO {
 
     public Corrida consultaCorridaPorNome(String nome) throws SQLException {
         String sql = "SELECT id, nome, primeiro, segundo, terceiro FROM corrida WHERE nome = ?";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, nome);
 
@@ -57,7 +61,7 @@ public class CorridaDAO {
 
     public Corrida consultaCorridaPorId(int id) throws SQLException {
         String sql = "SELECT nome, primeiro, segundo, terceiro FROM corrida WHERE id = ?";
-        
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
 
@@ -77,27 +81,26 @@ public class CorridaDAO {
         return null;
     }
 
-    public Corrida[] consultaCorridas() throws SQLException {
+    public List<Corrida> consultaCorridas() {
         String sql = "SELECT nome, primeiro, segundo, terceiro FROM corrida";
-        
+        List<Corrida> corridas = new ArrayList<>();
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
-                Corrida[] corridas = new Corrida[3];
-                int i = 0;
                 while (rs.next()) {
                     String nome = rs.getString("nome");
                     String primeiro = rs.getString("primeiro");
                     String segundo = rs.getString("segundo");
                     String terceiro = rs.getString("terceiro");
 
-                    corridas[i] = new Corrida(i, nome, primeiro, segundo, terceiro);
-                    i++;
+                    Corrida corrida = new Corrida(nome, primeiro, segundo, terceiro);
+                    corridas.add(corrida);
                 }
-                return corridas;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return corridas; // Return the List
     }
 }

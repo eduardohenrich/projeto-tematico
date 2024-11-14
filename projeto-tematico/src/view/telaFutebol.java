@@ -142,7 +142,7 @@ public class telaFutebol extends JFrame {
     private void voltarParaTelaInicial(String nome, int role) {
         dispose();
         // Assuming you have a TelaInicial class to go back to
-        principal telaInicial = new principal(nome, role);
+        Principal telaInicial = new Principal(nome, role);
         telaInicial.setExtendedState(JFrame.MAXIMIZED_BOTH);
         telaInicial.setLocationRelativeTo(null);
         telaInicial.setVisible(true);

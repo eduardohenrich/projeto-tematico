@@ -1,0 +1,29 @@
+CREATE TABLE corrida (
+    nome VARCHAR(255),
+    primeiro VARCHAR(255),
+    segundo VARCHAR(255),
+    terceiro VARCHAR(255)
+);
+
+CREATE TABLE futebol (
+    nome VARCHAR(255),
+    timeA VARCHAR(255),
+    pontoA INT DEFAULT 0,
+    timeB VARCHAR(255),
+    pontoB INT DEFAULT 0
+);
+
+CREATE TABLE natacao (
+    nome VARCHAR(255),
+    primeiro VARCHAR(255),
+    segundo VARCHAR(255),
+    terceiro VARCHAR(255)
+);
+
+CREATE TABLE usuario (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    role INT NOT NULL DEFAULT 0
+);

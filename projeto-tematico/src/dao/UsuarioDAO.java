@@ -97,12 +97,13 @@ public class UsuarioDAO {
 					String senha = rs.getString("senha");
 					int role = rs.getInt("role");
 
-					usuario = new Usuario(id, nome, email, senha, role); // Passando o ID
+					return usuario = new Usuario(id, nome, email, senha, role); // Passando o ID
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return usuario;
+
+		return null;
 	}
 }
