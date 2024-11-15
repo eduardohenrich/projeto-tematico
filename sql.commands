@@ -1,4 +1,5 @@
 CREATE TABLE corrida (
+    id SERIAL PRIMARY KEY,
     nome VARCHAR(255),
     primeiro VARCHAR(255),
     segundo VARCHAR(255),
@@ -6,6 +7,7 @@ CREATE TABLE corrida (
 );
 
 CREATE TABLE futebol (
+    id SERIAL PRIMARY KEY,
     nome VARCHAR(255),
     timeA VARCHAR(255),
     pontoA INT DEFAULT 0,
@@ -14,6 +16,7 @@ CREATE TABLE futebol (
 );
 
 CREATE TABLE natacao (
+    id SERIAL PRIMARY KEY,
     nome VARCHAR(255),
     primeiro VARCHAR(255),
     segundo VARCHAR(255),
@@ -27,3 +30,13 @@ CREATE TABLE usuario (
     senha VARCHAR(255) NOT NULL,
     role INT NOT NULL DEFAULT 0
 );
+
+# ATENÇÃO !!!!!!!!!
+# NÃO RODAR ISSO AQUI SE NÃO SOUBER O QUE TA FAZENDO, FALAR COM O JOÃO
+DROP TABLE usuario
+
+DROP TABLE futebol
+
+DROP TABLE natacao
+
+DROP TABLE corrida
