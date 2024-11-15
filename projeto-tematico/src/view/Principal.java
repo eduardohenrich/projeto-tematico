@@ -82,48 +82,76 @@ public class Principal extends JFrame {
     }
 
     private JPanel createGamePanel(String gameName, String userName, int role, List<?> gamesList, GameFetcher fetcher, GameRenderer renderer) {
+        // Main game panel with fixed height
         JPanel gamePanel = new JPanel(new BorderLayout());
-        gamePanel.setBorder(new EmptyBorder(10, 20, 10, 20));
-        gamePanel.setBackground(new Color(200, 200, 200));
+        gamePanel.setBorder(new EmptyBorder(15, 20, 15, 20));
+        gamePanel.setBackground(new Color(230, 230, 230));
+        gamePanel.setPreferredSize(new Dimension(800, 500)); // Fixed width and height
+
+        // Title panel with sport name and "+"" button
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        titlePanel.setOpaque(false); // Transparent background to match the parent panel
 
         JLabel lblGame = new JLabel(gameName, SwingConstants.LEFT);
-        lblGame.setFont(new Font("Tahoma", Font.PLAIN, 18));
-        gamePanel.add(lblGame, BorderLayout.WEST);
+        lblGame.setFont(new Font("Tahoma", Font.BOLD, 20));
+        lblGame.setForeground(new Color(50, 50, 50));
 
+        // Add the game name to the title panel
+        titlePanel.add(lblGame);
+        gamePanel.add(titlePanel, BorderLayout.NORTH);
+
+        if (role != 0) {
+            JButton btnAdd = new JButton("+");
+            btnAdd.setFont(new Font("Tahoma", Font.BOLD, 18));
+            btnAdd.setBackground(new Color(139, 0, 0));
+            btnAdd.setForeground(Color.WHITE);
+            btnAdd.setFocusPainted(false);
+            btnAdd.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+            btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            btnAdd.addActionListener(e -> fetcher.createPage(userName, role));
+
+            titlePanel.add(btnAdd);
+        }
+
+        // Check if the game list is empty
         if (gamesList == null || gamesList.isEmpty()) {
             JLabel lblError = new JLabel("Erro ao carregar " + gameName.toLowerCase(), SwingConstants.CENTER);
             lblError.setFont(new Font("Tahoma", Font.BOLD, 16));
             lblError.setForeground(Color.RED);
             lblError.setOpaque(true);
-            lblError.setBackground(Color.WHITE);
-            lblError.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            lblError.setBackground(new Color(255, 245, 245));
+            lblError.setBorder(new EmptyBorder(10, 10, 10, 10));
             gamePanel.add(lblError, BorderLayout.CENTER);
         } else {
+            // Container for game details using a grid layout
             JPanel gamesContainer = new JPanel();
-            gamesContainer.setLayout(new BoxLayout(gamesContainer, BoxLayout.Y_AXIS));
+            gamesContainer.setLayout(new GridLayout(0, 3, 10, 10)); // 3 cards per row with gaps
+            gamesContainer.setBackground(new Color(245, 245, 245));
+            gamesContainer.setBorder(new EmptyBorder(10, 10, 10, 10));
 
             for (Object game : gamesList) {
-                JPanel gameDetailPanel = renderer.renderGame(game);
-                gamesContainer.add(gameDetailPanel);
+                JPanel gameCard = renderer.renderGame(game);
+
+                // Style for each card
+                gameCard.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+                gameCard.setBackground(new Color(255, 255, 255));
+                gameCard.setPreferredSize(new Dimension(200, 150)); // Set fixed size for cards
+                gameCard.setMaximumSize(new Dimension(200, 150));
+                gamesContainer.add(gameCard);
             }
 
+            // Scroll pane to hold the game list
             JScrollPane scrollPane = new JScrollPane(gamesContainer);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            scrollPane.setPreferredSize(new Dimension(600, 400));
+            scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Smooth scrolling
+            scrollPane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+            scrollPane.setPreferredSize(new Dimension(600, 400)); // Ensure it fits within the fixed panel height
             gamePanel.add(scrollPane, BorderLayout.CENTER);
-        }
-
-        if (role != 0) {
-            JButton btnBet = new JButton("Criar resultado");
-            btnBet.setFont(new Font("Tahoma", Font.BOLD, 13));
-            btnBet.setBackground(new Color(100, 100, 100));
-            btnBet.setForeground(Color.WHITE);
-            btnBet.addActionListener(e -> fetcher.createPage(userName, role));
-            gamePanel.add(btnBet, BorderLayout.EAST);
         }
 
         return gamePanel;
     }
+
 
     private JPanel createFutebolPanel(String gameName, String userName, int role) {
         List<Futebol> futebols = new ArrayList<>();
