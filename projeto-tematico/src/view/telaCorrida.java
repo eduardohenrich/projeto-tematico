@@ -3,7 +3,7 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import controller.CorridaController;
-import model.Usuario;
+import model.Corrida;  // Assuming model.Corrida is the model class for the race event
 
 import java.awt.*;
 
@@ -18,13 +18,19 @@ public class telaCorrida extends JFrame {
     private JTextField terceiroField;
     private JLabel messageLabel;
 
-    public telaCorrida(String message, String name, int role) {
+    public telaCorrida(String message, String name, int role, Corrida corrida) {
         controller = new CorridaController(this);
-        initializeFrame(message, name, role);
+        initializeFrame(message, name, role, corrida);
     }
 
-    private void initializeFrame(String message, String name, int role) {
-        setTitle("Cadastro de Corrida - OlympicBET");
+    private void initializeFrame(String message, String name, int role, Corrida corrida) {
+        boolean update = corrida != null;
+        if (update) {
+            setTitle("Atualizar Evento de Corrida - OlympicBET");
+        } else {
+            setTitle("Cadastro de Corrida - OlympicBET");
+        }
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1121, 694);
         setLocationRelativeTo(null);
@@ -35,7 +41,7 @@ public class telaCorrida extends JFrame {
         contentPane.setLayout(new GridBagLayout());
         setContentPane(contentPane);
 
-        JPanel corridaPanel = createCorridaPanel(message, name, role);
+        JPanel corridaPanel = createCorridaPanel(message, name, role, corrida);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
@@ -43,7 +49,10 @@ public class telaCorrida extends JFrame {
         contentPane.add(corridaPanel, gbc);
     }
 
-    private JPanel createCorridaPanel(String message, String name, int role) {
+    private JPanel createCorridaPanel(String message, String name, int role, final Corrida corrida) {
+
+        boolean update = corrida != null;
+
         JPanel corridaPanel = new JPanel();
         corridaPanel.setBackground(new Color(192, 192, 192));
         corridaPanel.setLayout(new GridBagLayout());
@@ -60,6 +69,9 @@ public class telaCorrida extends JFrame {
 
         nomeField = new JTextField(20);
         nomeField.setBackground(Color.WHITE);
+        if (update) {
+            nomeField.setText(corrida.getNome());
+        }
         GridBagConstraints gbc_nomeField = createGbc(1, 1);
         corridaPanel.add(nomeField, gbc_nomeField);
 
@@ -70,6 +82,9 @@ public class telaCorrida extends JFrame {
 
         primeiroField = new JTextField(20);
         primeiroField.setBackground(Color.WHITE);
+        if (update) {
+            primeiroField.setText(corrida.getPrimeiro());
+        }
         GridBagConstraints gbc_primeiroField = createGbc(1, 2);
         corridaPanel.add(primeiroField, gbc_primeiroField);
 
@@ -80,6 +95,9 @@ public class telaCorrida extends JFrame {
 
         segundoField = new JTextField(20);
         segundoField.setBackground(Color.WHITE);
+        if (update) {
+            segundoField.setText(corrida.getSegundo());
+        }
         GridBagConstraints gbc_segundoField = createGbc(1, 3);
         corridaPanel.add(segundoField, gbc_segundoField);
 
@@ -90,13 +108,22 @@ public class telaCorrida extends JFrame {
 
         terceiroField = new JTextField(20);
         terceiroField.setBackground(Color.WHITE);
+        if (update) {
+            terceiroField.setText(corrida.getTerceiro());
+        }
         GridBagConstraints gbc_terceiroField = createGbc(1, 4);
         corridaPanel.add(terceiroField, gbc_terceiroField);
 
-        JButton cadastrarButton = new JButton("Cadastrar Corrida");
+        JButton cadastrarButton = new JButton(corrida == null ? "Cadastrar Corrida" : "Atualizar Corrida");
         cadastrarButton.setFont(new Font("Tahoma", Font.BOLD, 12));
         cadastrarButton.setBackground(Color.WHITE);
-        cadastrarButton.addActionListener(e -> controller.salvaCorrida());
+        cadastrarButton.addActionListener(e -> {
+            if (!update) {
+                controller.salvaCorrida(); // Cadastrar novo evento
+            } else {
+                controller.updateCorrida(corrida.getId()); // Atualizar evento existente
+            }
+        });
         GridBagConstraints gbc_cadastrarButton = createGbc(1, 5);
         corridaPanel.add(cadastrarButton, gbc_cadastrarButton);
 

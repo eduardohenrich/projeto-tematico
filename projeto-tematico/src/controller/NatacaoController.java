@@ -33,4 +33,24 @@ public class NatacaoController {
             return;
         }
     }
+
+    public void updateNatacao(int id) {
+
+        String nome = tela.getNomeField().getText();
+        String primeiro = tela.getPrimeiroField().getText();
+        String segundo = tela.getSegundoField().getText();
+        String terceiro = tela.getTerceiroField().getText();
+
+        Connection conexao = null;
+        try {
+            conexao = new Conexao().getConnection();
+            NatacaoDAO natacaoDAO = new NatacaoDAO(conexao);
+            natacaoDAO.update(new Natacao(id, nome, primeiro, segundo, terceiro));
+            tela.getMessageLabel().setText("Evento de Natação atualizado com sucesso!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            tela.getMessageLabel().setText("Ouve um erro ao atualizar o evento de Natação!");
+            return;
+        }
+    }
 }

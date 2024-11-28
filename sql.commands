@@ -6,6 +6,14 @@ CREATE TABLE corrida (
     terceiro VARCHAR(255)
 );
 
+CREATE TABLE natacao (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255),
+    primeiro VARCHAR(255),
+    segundo VARCHAR(255),
+    terceiro VARCHAR(255)
+);
+
 CREATE TABLE futebol (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255),
@@ -13,14 +21,6 @@ CREATE TABLE futebol (
     pontoA INT DEFAULT 0,
     timeB VARCHAR(255),
     pontoB INT DEFAULT 0
-);
-
-CREATE TABLE natacao (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(255),
-    primeiro VARCHAR(255),
-    segundo VARCHAR(255),
-    terceiro VARCHAR(255)
 );
 
 CREATE TABLE usuario (

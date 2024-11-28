@@ -37,4 +37,28 @@ public class CorridaController {
             return;
         }
     }
+
+    public void updateCorrida(int id) {
+
+        String nome = tela.getNomeField().getText();
+        String primeiro = tela.getPrimeiroField().getText();
+        String segundo = tela.getSegundoField().getText();
+        String terceiro = tela.getTerceiroField().getText();
+
+        Corrida newCorrida = new Corrida(id, nome, primeiro, segundo, terceiro);
+
+        Connection conexao = null;
+        try {
+            conexao = new Conexao().getConnection();
+            CorridaDAO corridaDAO = new CorridaDAO(conexao);
+            corridaDAO.update(newCorrida);
+            tela.getMessageLabel().setText("Corrida atualizada com sucesso!");
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            tela.getMessageLabel().setText("Ouve um erro ao atualizar a corrida!");
+            return;
+        }
+    }
+
 }

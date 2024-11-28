@@ -3,6 +3,8 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import controller.FutebolController;
+import model.*;
+
 import java.awt.*;
 
 public class telaFutebol extends JFrame {
@@ -17,13 +19,19 @@ public class telaFutebol extends JFrame {
     private JTextField pontoBField;
     private JLabel messageLabel;
 
-    public telaFutebol(String message, String name, int role) {
+    public telaFutebol(String message, String name, int role, Futebol futebol) {
         controller = new FutebolController(this);
-        initializeFrame(message, name, role);
+        initializeFrame(message, name, role, futebol);
     }
 
-    private void initializeFrame(String message, String name, int role) {
-        setTitle("Cadastro de Futebol - OlympicBET");
+    private void initializeFrame(String message, String name, int role, Futebol futebol) {
+        boolean update = futebol != null;
+        if (update) {
+            setTitle("Update de Futebol - OlympicBET");
+        } else {
+            setTitle("Cadastro de Futebol - OlympicBET");
+        }
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1121, 694);
         setLocationRelativeTo(null);
@@ -34,7 +42,7 @@ public class telaFutebol extends JFrame {
         contentPane.setLayout(new GridBagLayout());
         setContentPane(contentPane);
 
-        JPanel futebolPanel = createFutebolPanel(message, name, role);
+        JPanel futebolPanel = createFutebolPanel(message, name, role, futebol);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
@@ -42,7 +50,10 @@ public class telaFutebol extends JFrame {
         contentPane.add(futebolPanel, gbc);
     }
 
-    private JPanel createFutebolPanel(String message, String name, int role) {
+    private JPanel createFutebolPanel(String message, String name, int role, final Futebol futebol) {
+
+        boolean update = futebol != null;
+
         JPanel futebolPanel = new JPanel();
         futebolPanel.setBackground(new Color(192, 192, 192));
         futebolPanel.setLayout(new GridBagLayout());
@@ -59,6 +70,9 @@ public class telaFutebol extends JFrame {
 
         nomeField = new JTextField(20);
         nomeField.setBackground(Color.WHITE);
+        if (update) {
+            nomeField.setText(futebol.getNome());
+        }
         GridBagConstraints gbc_nomeField = createGbc(1, 1);
         futebolPanel.add(nomeField, gbc_nomeField);
 
@@ -69,6 +83,9 @@ public class telaFutebol extends JFrame {
 
         timeAField = new JTextField(20);
         timeAField.setBackground(Color.WHITE);
+        if (update) {
+            timeAField.setText(futebol.getTimeA());
+        }
         GridBagConstraints gbc_timeAField = createGbc(1, 2);
         futebolPanel.add(timeAField, gbc_timeAField);
 
@@ -79,6 +96,9 @@ public class telaFutebol extends JFrame {
 
         pontoAField = new JTextField(20);
         pontoAField.setBackground(Color.WHITE);
+        if (update) {
+            pontoAField.setText(String.valueOf(futebol.getPontoA()));
+        }
         GridBagConstraints gbc_pontoAField = createGbc(1, 3);
         futebolPanel.add(pontoAField, gbc_pontoAField);
 
@@ -89,6 +109,9 @@ public class telaFutebol extends JFrame {
 
         timeBField = new JTextField(20);
         timeBField.setBackground(Color.WHITE);
+        if (update) {
+            timeBField.setText(futebol.getTimeB());
+        }
         GridBagConstraints gbc_timeBField = createGbc(1, 4);
         futebolPanel.add(timeBField, gbc_timeBField);
 
@@ -99,13 +122,22 @@ public class telaFutebol extends JFrame {
 
         pontoBField = new JTextField(20);
         pontoBField.setBackground(Color.WHITE);
+        if (update) {
+            pontoBField.setText(String.valueOf(futebol.getPontoB()));
+        }
         GridBagConstraints gbc_pontoBField = createGbc(1, 5);
         futebolPanel.add(pontoBField, gbc_pontoBField);
 
-        JButton cadastrarButton = new JButton("Cadastrar Jogo");
+        JButton cadastrarButton = new JButton(futebol == null ? "Cadastrar Jogo" : "Atualizar Jogo");
         cadastrarButton.setFont(new Font("Tahoma", Font.BOLD, 12));
         cadastrarButton.setBackground(Color.WHITE);
-        cadastrarButton.addActionListener(e -> controller.salvaFutebol());
+        cadastrarButton.addActionListener(e -> {
+            if (!update) {
+                controller.salvaFutebol();
+            } else {
+                controller.updateFutebol(futebol.getId());
+            }
+        });
         GridBagConstraints gbc_cadastrarButton = createGbc(1, 6);
         futebolPanel.add(cadastrarButton, gbc_cadastrarButton);
 

@@ -3,14 +3,8 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import dao.Conexao;
-import dao.CorridaDAO;
-import dao.FutebolDAO;
-import dao.NatacaoDAO;
-import model.Corrida;
-import model.Futebol;
-import model.Natacao;
-
+import dao.*;
+import model.*;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,7 +19,6 @@ public class Principal extends JFrame {
     public interface GameFetcher {
         void createPage(String userName, int role);
     }
-    
 
     public Principal(String nome, int role) {
         setTitle("OlympicBET");
@@ -49,8 +42,8 @@ public class Principal extends JFrame {
         mainPanel.setBackground(Color.LIGHT_GRAY);
 
         mainPanel.add(createFutebolPanel("Futebol", nome, role));
-        mainPanel.add(createNatacaoPanel("Natação", nome,role));
-        mainPanel.add(createCorridaPanel("Corrida", nome,role));
+        mainPanel.add(createNatacaoPanel("Natação", nome, role));
+        mainPanel.add(createCorridaPanel("Corrida", nome, role));
 
         contentPane.add(mainPanel, BorderLayout.CENTER);
     }
@@ -88,7 +81,7 @@ public class Principal extends JFrame {
         gamePanel.setBackground(new Color(230, 230, 230));
         gamePanel.setPreferredSize(new Dimension(800, 500)); // Fixed width and height
 
-        // Title panel with sport name and "+"" button
+        // Title panel with sport name and "+" button
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         titlePanel.setOpaque(false); // Transparent background to match the parent panel
 
@@ -137,6 +130,24 @@ public class Principal extends JFrame {
                 gameCard.setBackground(new Color(255, 255, 255));
                 gameCard.setPreferredSize(new Dimension(200, 150)); // Set fixed size for cards
                 gameCard.setMaximumSize(new Dimension(200, 150));
+
+                // Add delete button to each game card
+                if (role != 0) {
+                    // Delete button
+                    JButton deleteButton = new JButton("Excluir");
+                    deleteButton.setBackground(new Color(255, 0, 0));
+                    deleteButton.setForeground(Color.WHITE);
+                    deleteButton.addActionListener(e -> showDeleteConfirmationDialog(userName, role, game, getGameId(game)));
+                    gameCard.add(deleteButton, BorderLayout.EAST);
+
+                    // Update button
+                    JButton updateButton = new JButton("Atualizar");
+                    updateButton.setBackground(new Color(0, 128, 0)); // Green color
+                    updateButton.setForeground(Color.WHITE);
+                    updateButton.addActionListener(e -> openUpdatePage(game, userName, role, getGameId(game)));
+                    gameCard.add(updateButton, BorderLayout.SOUTH);
+                }
+
                 gamesContainer.add(gameCard);
             }
 
@@ -152,6 +163,115 @@ public class Principal extends JFrame {
         return gamePanel;
     }
 
+    private int getGameId(Object game) {
+    if (game instanceof Futebol) {
+        return ((Futebol) game).getId(); // Get the ID for Futebol game
+    } else if (game instanceof Natacao) {
+        return ((Natacao) game).getId(); // Get the ID for Natacao game
+    } else if (game instanceof Corrida) {
+        return ((Corrida) game).getId(); // Get the ID for Corrida game
+    }
+    return 0; // Return -1 if game is of unknown type
+}
+
+    private void openUpdatePage(Object game, String userName, int role, int id) {
+        dispose(); // Close the current page
+
+        if (game instanceof Futebol) {
+            Futebol futebol = (Futebol) game;
+            futebol.setId(id);
+            telaFutebol telaFutebol = new telaFutebol("", userName, role, futebol);
+            telaFutebol.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            telaFutebol.setLocationRelativeTo(null);
+            telaFutebol.setVisible(true);
+        } else if (game instanceof Natacao) {
+            Natacao natacao = (Natacao) game;
+            natacao.setId(id);
+            telaNatacao telaNatacao = new telaNatacao("", userName, role, natacao);
+            telaNatacao.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            telaNatacao.setLocationRelativeTo(null);
+            telaNatacao.setVisible(true);
+        } else if (game instanceof Corrida) {
+            Corrida corrida = (Corrida) game;
+            corrida.setId(id);
+            telaCorrida telaCorrida = new telaCorrida("", userName, role, corrida);
+            telaCorrida.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            telaCorrida.setLocationRelativeTo(null);
+            telaCorrida.setVisible(true);
+        }
+    }
+
+    private void showDeleteConfirmationDialog(String userName, int role, Object game, int id) {
+        int option = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja excluir este item?",
+                "Confirmar Exclusão", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (option == JOptionPane.YES_OPTION) {
+            deleteGame(userName, role, game, id); // Call delete function after confirmation
+        }
+    }
+
+    private void deleteGame(String userName, int role, Object game, int id) {
+        // Implement your deletion logic here based on the game type
+        if (game instanceof Futebol) {
+            Futebol futebol = (Futebol) game;
+            futebol.setId(id);
+            deleteFutebol(userName, role, futebol);
+        } else if (game instanceof Natacao) {
+            Natacao natacao = (Natacao) game;
+            natacao.setId(id);
+            deleteNatacao(userName, role, natacao);
+        } else if (game instanceof Corrida) {
+            Corrida corrida = (Corrida) game;
+            corrida.setId(id);
+            deleteCorrida(userName, role, corrida);
+        }
+    }
+
+    private void deleteFutebol(String userName, int role, Futebol futebol) {
+        try (Connection conexao = new Conexao().getConnection()) {
+            FutebolDAO futebolDAO = new FutebolDAO(conexao);
+            futebolDAO.deleteFutebol(futebol.getId()); // Delete logic for Futebol
+            JOptionPane.showMessageDialog(this, "Futebol excluído com sucesso!");
+            refreshGamePanels(userName, role); // Refresh the game panels after deletion
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao excluir Futebol!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void deleteNatacao(String userName, int role, Natacao natacao) {
+        try (Connection conexao = new Conexao().getConnection()) {
+            NatacaoDAO natacaoDAO = new NatacaoDAO(conexao);
+            natacaoDAO.deleteNatacao(natacao.getId()); // Delete logic for Natacao
+            JOptionPane.showMessageDialog(this, "Natação excluída com sucesso!");
+            refreshGamePanels(userName, role); // Refresh the game panels after deletion
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao excluir Natação!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void deleteCorrida(String userName, int role, Corrida corrida) {
+        try (Connection conexao = new Conexao().getConnection()) {
+            CorridaDAO corridaDAO = new CorridaDAO(conexao);
+            corridaDAO.deleteCorrida(corrida.getId()); // Delete logic for Corrida
+            JOptionPane.showMessageDialog(this, "Corrida excluída com sucesso!");
+            refreshGamePanels(userName, role); // Refresh the game panels after deletion
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao excluir Corrida!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void refreshGamePanels(String userName, int role) {
+
+        // Show the page again
+        Principal principal = new Principal(userName, role);
+        principal.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        principal.setLocationRelativeTo(null);
+        principal.setVisible(true);
+
+    }
 
     private JPanel createFutebolPanel(String gameName, String userName, int role) {
         List<Futebol> futebols = new ArrayList<>();
@@ -262,7 +382,7 @@ public class Principal extends JFrame {
 
     private void CreateFutebolPage(String name, int role) {
         dispose();
-        telaFutebol telaFutebol = new telaFutebol("", name, role);
+        telaFutebol telaFutebol = new telaFutebol("", name, role, null);
         telaFutebol.setExtendedState(JFrame.MAXIMIZED_BOTH);
         telaFutebol.setLocationRelativeTo(null);
         telaFutebol.setVisible(true);
@@ -270,7 +390,7 @@ public class Principal extends JFrame {
 
     private void CreateNatacaoPage(String name, int role) {
         dispose();
-        telaNatacao telaNatacao = new telaNatacao("", name, role);
+        telaNatacao telaNatacao = new telaNatacao("", name, role, null);
         telaNatacao.setExtendedState(JFrame.MAXIMIZED_BOTH);
         telaNatacao.setLocationRelativeTo(null);
         telaNatacao.setVisible(true);
@@ -278,7 +398,7 @@ public class Principal extends JFrame {
 
     private void CreateCorridaPage(String name, int role) {
         dispose();
-        telaCorrida telaCorrida = new telaCorrida("", name, role);
+        telaCorrida telaCorrida = new telaCorrida("", name, role, null);
         telaCorrida.setExtendedState(JFrame.MAXIMIZED_BOTH);
         telaCorrida.setLocationRelativeTo(null);
         telaCorrida.setVisible(true);

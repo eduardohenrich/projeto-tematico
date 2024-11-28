@@ -37,6 +37,20 @@ public class CorridaDAO {
         connection.close();
     }
 
+    public void update(Corrida corrida) throws SQLException {
+        String sql = "UPDATE corrida SET nome = ?, primeiro = ?, segundo = ?, terceiro = ? WHERE id = ?";
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setString(1, corrida.getNome());
+        stm.setString(2, corrida.getPrimeiro());
+        stm.setString(3, corrida.getSegundo());
+        stm.setString(4, corrida.getTerceiro());
+        stm.setInt(5, corrida.getId());
+        stm.execute();
+
+        stm.close();
+        connection.close();
+    }
+
     public Corrida consultaCorridaPorNome(String nome) throws SQLException {
         String sql = "SELECT id, nome, primeiro, segundo, terceiro FROM corrida WHERE nome = ?";
 
@@ -82,18 +96,19 @@ public class CorridaDAO {
     }
 
     public List<Corrida> consultaCorridas() {
-        String sql = "SELECT nome, primeiro, segundo, terceiro FROM corrida";
+        String sql = "SELECT id, nome, primeiro, segundo, terceiro FROM corrida";
         List<Corrida> corridas = new ArrayList<>();
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    int id = rs.getInt("id");
                     String nome = rs.getString("nome");
                     String primeiro = rs.getString("primeiro");
                     String segundo = rs.getString("segundo");
                     String terceiro = rs.getString("terceiro");
 
-                    Corrida corrida = new Corrida(nome, primeiro, segundo, terceiro);
+                    Corrida corrida = new Corrida(id, nome, primeiro, segundo, terceiro);
                     corridas.add(corrida);
                 }
             }
@@ -102,5 +117,17 @@ public class CorridaDAO {
         }
 
         return corridas; // Return the List
+    }
+
+    public boolean deleteCorrida(int id) throws SQLException {
+        String sql = "DELETE FROM corrida WHERE id = ?";
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setInt(1, id);
+        int rows = stm.executeUpdate();
+
+        stm.close();
+        connection.close();
+
+        return rows > 0;
     }
 }

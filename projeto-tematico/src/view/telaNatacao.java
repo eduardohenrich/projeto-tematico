@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import controller.NatacaoController;
+import model.Natacao;
 import java.awt.*;
 
 public class telaNatacao extends JFrame {
@@ -16,13 +17,19 @@ public class telaNatacao extends JFrame {
     private JTextField terceiroField;
     private JLabel messageLabel;
 
-    public telaNatacao(String message, String name, int role) {
+    public telaNatacao(String message, String name, int role, Natacao natacao) {
         controller = new NatacaoController(this);
-        initializeFrame(message, name, role);
+        initializeFrame(message, name, role, natacao);
     }
 
-    private void initializeFrame(String message, String name, int role) {
-        setTitle("Cadastro de Natação - OlympicBET");
+    private void initializeFrame(String message, String name, int role, Natacao natacao) {
+        boolean update = natacao != null;
+        if (update) {
+            setTitle("Atualizar Evento de Natação - OlympicBET");
+        } else {
+            setTitle("Cadastro de Natação - OlympicBET");
+        }
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1121, 694);
         setLocationRelativeTo(null);
@@ -33,7 +40,7 @@ public class telaNatacao extends JFrame {
         contentPane.setLayout(new GridBagLayout());
         setContentPane(contentPane);
 
-        JPanel natacaoPanel = createNatacaoPanel(message, name, role);
+        JPanel natacaoPanel = createNatacaoPanel(message, name, role, natacao);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
@@ -41,7 +48,10 @@ public class telaNatacao extends JFrame {
         contentPane.add(natacaoPanel, gbc);
     }
 
-    private JPanel createNatacaoPanel(String message, String name, int role) {
+    private JPanel createNatacaoPanel(String message, String name, int role, final Natacao natacao) {
+
+        boolean update = natacao != null;
+
         JPanel natacaoPanel = new JPanel();
         natacaoPanel.setBackground(new Color(192, 192, 192));
         natacaoPanel.setLayout(new GridBagLayout());
@@ -58,6 +68,9 @@ public class telaNatacao extends JFrame {
 
         nomeField = new JTextField(20);
         nomeField.setBackground(Color.WHITE);
+        if (update) {
+            nomeField.setText(natacao.getNome());
+        }
         GridBagConstraints gbc_nomeField = createGbc(1, 1);
         natacaoPanel.add(nomeField, gbc_nomeField);
 
@@ -68,6 +81,9 @@ public class telaNatacao extends JFrame {
 
         primeiroField = new JTextField(20);
         primeiroField.setBackground(Color.WHITE);
+        if (update) {
+            primeiroField.setText(natacao.getPrimeiro());
+        }
         GridBagConstraints gbc_primeiroField = createGbc(1, 2);
         natacaoPanel.add(primeiroField, gbc_primeiroField);
 
@@ -78,6 +94,9 @@ public class telaNatacao extends JFrame {
 
         segundoField = new JTextField(20);
         segundoField.setBackground(Color.WHITE);
+        if (update) {
+            segundoField.setText(natacao.getSegundo());
+        }
         GridBagConstraints gbc_segundoField = createGbc(1, 3);
         natacaoPanel.add(segundoField, gbc_segundoField);
 
@@ -88,13 +107,23 @@ public class telaNatacao extends JFrame {
 
         terceiroField = new JTextField(20);
         terceiroField.setBackground(Color.WHITE);
+        if (update) {
+            terceiroField.setText(natacao.getTerceiro());
+        }
         GridBagConstraints gbc_terceiroField = createGbc(1, 4);
         natacaoPanel.add(terceiroField, gbc_terceiroField);
 
-        JButton cadastrarButton = new JButton("Cadastrar Evento");
+        JButton cadastrarButton = new JButton(natacao == null ? "Cadastrar Evento" : "Atualizar Evento");
         cadastrarButton.setFont(new Font("Tahoma", Font.BOLD, 12));
         cadastrarButton.setBackground(Color.WHITE);
-        cadastrarButton.addActionListener(e -> controller.salvaNatacao());
+        cadastrarButton.addActionListener(e -> {
+
+            if (!update) {
+                controller.salvaNatacao(); // Cadastrar novo evento
+            } else {
+                controller.updateNatacao(natacao.getId()); // Atualizar evento existente
+            }
+        });
         GridBagConstraints gbc_cadastrarButton = createGbc(1, 5);
         natacaoPanel.add(cadastrarButton, gbc_cadastrarButton);
 
