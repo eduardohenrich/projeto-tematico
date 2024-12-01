@@ -26,9 +26,9 @@ public class telaCorrida extends JFrame {
     private void initializeFrame(String message, String name, int role, Corrida corrida) {
         boolean update = corrida != null;
         if (update) {
-            setTitle("Atualizar Evento de Corrida - OlympicBET");
+            setTitle("Atualizar Evento de Corrida - OlympicResults");
         } else {
-            setTitle("Cadastro de Corrida - OlympicBET");
+            setTitle("Cadastro de Corrida - OlympicResults");
         }
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -65,7 +65,7 @@ public class Login extends JFrame {
         loginPanel.setBackground(new Color(192, 192, 192));
         loginPanel.setLayout(new GridBagLayout());
 
-        JLabel lblTitle = new JLabel("OlympicBET");
+        JLabel lblTitle = new JLabel("OlympicResults");
         lblTitle.setFont(new Font("Sylfaen", Font.BOLD, 18));
         GridBagConstraints gbc_lblTitle = createGbc(0, 0, 2);
         loginPanel.add(lblTitle, gbc_lblTitle);

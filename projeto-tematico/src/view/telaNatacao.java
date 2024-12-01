@@ -25,9 +25,9 @@ public class telaNatacao extends JFrame {
     private void initializeFrame(String message, String name, int role, Natacao natacao) {
         boolean update = natacao != null;
         if (update) {
-            setTitle("Atualizar Evento de Natação - OlympicBET");
+            setTitle("Atualizar Evento de Natação - OlympicResults");
         } else {
-            setTitle("Cadastro de Natação - OlympicBET");
+            setTitle("Cadastro de Natação - OlympicResults");
         }
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

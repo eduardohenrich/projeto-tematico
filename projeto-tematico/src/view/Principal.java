@@ -21,7 +21,7 @@ public class Principal extends JFrame {
     }
 
     public Principal(String nome, int role) {
-        setTitle("OlympicBET");
+        setTitle("OlympicResults");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1065, 659);
         contentPane = new JPanel(new BorderLayout());
@@ -53,7 +53,7 @@ public class Principal extends JFrame {
         headerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         headerPanel.setBackground(new Color(60, 60, 60));
 
-        JLabel lblTitle = new JLabel("OlympicBET", SwingConstants.LEFT);
+        JLabel lblTitle = new JLabel("OlympicResults", SwingConstants.LEFT);
         lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
         lblTitle.setForeground(Color.WHITE);
         headerPanel.add(lblTitle, BorderLayout.WEST);

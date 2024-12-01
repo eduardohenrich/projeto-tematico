@@ -27,9 +27,9 @@ public class telaFutebol extends JFrame {
     private void initializeFrame(String message, String name, int role, Futebol futebol) {
         boolean update = futebol != null;
         if (update) {
-            setTitle("Update de Futebol - OlympicBET");
+            setTitle("Update de Futebol - OlympicResults");
         } else {
-            setTitle("Cadastro de Futebol - OlympicBET");
+            setTitle("Cadastro de Futebol - OlympicResults");
         }
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
